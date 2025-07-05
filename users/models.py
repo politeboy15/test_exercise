@@ -1,27 +1,16 @@
-from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django.utils.text import slugify
 
-class User(AbstractUser):
-    # Оставляем username, но не спрашиваем его у пользователя напрямую
+class User(models.Model):
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
     date_of_birth = models.DateField(null=True, blank=True)
-
+    password = models.CharField(max_length=100)
+    confirm_password = models.CharField(max_length=100)
+    
+    REQUIRED_FIELDS = ['__all__']
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['first_name', 'last_name', 'date_of_birth']
-
-    def save(self, *args, **kwargs):
-        # Если username не задан, генерируем его автоматически
-        if not self.username:
-            base_slug = slugify(f"{self.first_name} {self.last_name}")
-            slug = base_slug
-            counter = 1
-            # Проверяем уникальность username
-            while User.objects.filter(username=slug).exclude(pk=self.pk).exists():
-                counter += 1
-                slug = f"{base_slug}-{counter}"
-            self.username = slug
-        super().save(*args, **kwargs)
-
+    is_anonymous = False
+    is_authenticated = True
     def __str__(self):
-        return self.email
+        return self.first_name + ' ' + self.last_name

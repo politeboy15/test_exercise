@@ -11,7 +11,9 @@ def home_view(request):
 def signin_view(request):
     form = SigninForm(request.POST or None)
     if form.is_valid():
-        form.save()
+        user = form.save(commit=False)  # не сохраняем сразу
+        user.set_password(form.cleaned_data['password'])  # если используешь хеширование пароля
+        user.save()
         return render(request, 'home.html')
     return render(request, 'users/signin.html', {'form': form})
 
@@ -27,7 +29,9 @@ def signout_view(request):
 def signup_view(request):
     form = SignupForm(request.POST or None)
     if form.is_valid():
-        form.save()
+        user = form.save(commit=False)  # не сохраняем сразу
+        user.set_password(form.cleaned_data['password'])  # если используешь хеширование пароля
+        user.save()
         return render(request, 'home.html')
     return render(request, 'users/signup.html', {'form': form})
 
@@ -43,6 +47,8 @@ def profile_view(request, user_id):
 def edit_profile_view(request):
     form = EditProfileForm(request.POST or None)
     if form.is_valid():
-        form.save()
+        user = form.save(commit=False)  # не сохраняем сразу
+        user.set_password(form.cleaned_data['password'])  # если используешь хеширование пароля
+        user.save()
         return render(request, 'profile.html')
     return render(request, 'users/edit_profile.html', {'form': form})

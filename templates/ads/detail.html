@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}Ad Detail{% endblock %}</title>
+</head>
+<body>
+    {% block content %}
+    <h1>{{ ad.title }}</h1>
+    <p>{{ ad.description }}</p>
+    <p>{{ ad.status }}</p>
+    <img src="{{ ad.image.url }}" alt="Ad's Image">
+    {% endblock %}
+    {% block user's_choise %}
+  <p>Want to trade?</p>
+  <form method="post">
+      {% csrf_token %}
+      <input type="radio" id="yes" name="choice" value="yes">
+      <label for="yes">Yes</label><br>
+
+      <input type="radio" id="no" name="choice" value="no">
+      <label for="no">No</label><br>
+
+      <button type="submit">Trade</button>
+  </form>
+{% endblock %}
+
+</body>

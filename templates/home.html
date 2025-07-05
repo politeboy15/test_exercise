@@ -12,5 +12,16 @@
     <a href="{% url 'signin' %}">Sign in</a>
     <a href="{% url 'signup' %}">Sign up</a>
     {% endif %}
+    {% if ads %}
+    {% for i in ads %}
+    <h3>
+        <a href="{% url 'ads/{{ i.id }}' slug=i.slug %}">{{ i.title }}</a>
+    </h3>
+    {% endfor %}
+    {% else %}
+    <p>No ads available.</p>
+    <br>
+    <p>Please come back later.</p>
+    {% endif %}
 </body>
 </html>

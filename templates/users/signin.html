@@ -10,9 +10,12 @@
         {% csrf_token %}
         {{ form.non_field_errors }}
         {{ form.email.errors }}
+        <p>Your e-mail:</p>
         {{ form.email }}
         {{ form.password.errors }}
+        <p>Your password:</p>
         {{ form.password }}
+        <br><br>
         <button type="submit">Sign In</button>
     </form>
 </body>

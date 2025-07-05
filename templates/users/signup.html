@@ -10,17 +10,24 @@
         {% csrf_token %}
         {{ form.non_field_errors }}
         {{ form.first_name.errors }}
+        <p>Your first name:</p>
         {{ form.first_name }}
         {{ form.last_name.errors }}
+        <p>Your last name:</p>
         {{ form.last_name }}
         {{ form.email.errors }}
+        <p>Your email:</p>
         {{ form.email }}
         {{ form.password.errors }}
+        <p>Your password:</p>
         {{ form.password }}
         {{ form.confirm_password.errors }}
+        <p>Confirm password:</p>
         {{ form.confirm_password }}
         {{ form.date_of_birth.errors }}
+        <p>Your date of birth[YYYY-MM-DD]:</p>
         {{ form.date_of_birth }}
+        <br><br>
         <button type="submit">Sign Up</button>
     </form>
 </body>

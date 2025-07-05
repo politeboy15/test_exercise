@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Trade Page</title>
+</head>
+<body>
+    <h1>Trade Page</h1>
+    <p>Trade page for {{ ad.title }}</p>
+    <form method="post">
+        {% csrf_token %}
+        <p>Choose one of your ads to trade:</p>
+        <select name="ad">
+            {% for ad in user.ads %}
+                <option value="{{ ad.id }}">{{ ad.title }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Trade</button>
+    </form>
+</body>
+</html>
