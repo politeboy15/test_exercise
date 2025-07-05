@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign Up</title>
+</head>
+<body>
+    <h1>Sign Up</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        {{ form.first_name.errors }}
+        {{ form.first_name }}
+        {{ form.last_name.errors }}
+        {{ form.last_name }}
+        {{ form.email.errors }}
+        {{ form.email }}
+        {{ form.password.errors }}
+        {{ form.password }}
+        {{ form.confirm_password.errors }}
+        {{ form.confirm_password }}
+        {{ form.date_of_birth.errors }}
+        {{ form.date_of_birth }}
+        <button type="submit">Sign Up</button>
+    </form>
+</body>
+</html>

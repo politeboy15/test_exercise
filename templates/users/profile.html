@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile</title>
+</head>
+<body>
+    {% if request.user == profile_user %}
+    <h1>Your Profile</h1>
+    <p>Name: {{ user.first_name }} {{ user.last_name }}</p>
+    <p>Email: {{ user.email }}</p>
+    <p>Date of birth: {{ user.date_of_birth }}</p>
+    <a href="{% url 'edit_profile' %}">Edit Profile</a>
+    <a href="{% url 'ads' %}">Your Ads</a>
+    <a href="{% url 'signout' %}">Sign out</a>
+    {% else %}
+    <h1>Profile</h1>
+    <p>Name: {{ user.first_name }} {{ user.last_name }}</p>
+    <p>Email: {{ user.email }}</p>
+    <p>Date of birth: {{ user.date_of_birth }}</p>
+    <a href="{% url 'ads' %}">View {{ user.first_name }}'s Ads</a>
+    {% endif %}
+</body>
+</html>
