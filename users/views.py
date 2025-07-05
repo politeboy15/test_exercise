@@ -3,6 +3,10 @@ from .forms import *
 
 
 # Create your views here.
+# home view
+def home_view(request):
+    return render(request, 'home.html')
+
 # signin view
 def signin_view(request):
     form = SigninForm(request.POST or None)
