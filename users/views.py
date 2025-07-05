@@ -33,3 +33,12 @@ def profile_view(request, user_id):
     return render(request, 'profile.html', {
         'profile_user': profile_user,
     })
+
+
+# edit profile view
+def edit_profile_view(request):
+    form = EditProfileForm(request.POST or None)
+    if form.is_valid():
+        form.save()
+        return render(request, 'profile.html')
+    return render(request, 'users/edit_profile.html', {'form': form})
