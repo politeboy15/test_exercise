@@ -1,29 +1,29 @@
 <!DOCTYPE html>
 <html>
-    {% load static %}
+{% load static %}
 <head>
     <title>Trade Page</title>
-    <a href="/" onclick="return confirm('Вы уверены, что хотите вернуться на главную страницу?')">🏠 Домой</a>
 </head>
 
 <body>
+    <a href="/" onclick="return confirm('Вы уверены, что хотите вернуться на главную страницу?')">🏠 Домой</a>
     <h1>Trade Page</h1>
-    <p>Trade page for {{ ad.title }}</p>
-    {% if user.ads.count == 0 %}
-    <p>You have no ads</p>
-    <a href="{% url 'home' %}">Back to home</a>
+    <p>Trade page for <strong>{{ ad.title }}</strong></p>
+
+    {% if not user_ads %}
+        <p>You have no ads</p>
+        <a href="{% url 'home' %}">Back to home</a>
     {% else %}
-    <form method="post">
-        {% csrf_token %}
-        <p>Choose one of your ads to trade:</p>
-        <select name="ad">
-            {% for ad in user.ads %}
-            <option value="{{ ad.id }}">{{ ad.title }}</option>
-            {% endfor %}
-        </select>
-        <button type="submit">Trade</button>
-    </form>
+        <form method="post">
+            {% csrf_token %}
+            <p>Choose one of your ads to trade:</p>
+            <select name="ad">
+                {% for item in user_ads %}
+                    <option value="{{ item.id }}">{{ item.title }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit">Trade</button>
+        </form>
     {% endif %}
 </body>
-
 </html>

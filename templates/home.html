@@ -8,7 +8,8 @@
 
 <body>
     {% if user.is_authenticated %}
-    <a href="{% url 'profile' %}">Profile</a>
+    <a href="{% url 'profile' request.user.id %}">Profile</a>
+    <a href="{% url 'create_ad' %}">Create Ad</a>
     <a href="{% url 'signout' %}">Quit</a>
     {% else %}
     <a href="{% url 'signin' %}">Sign in</a>
@@ -17,7 +18,7 @@
     {% if ads %}
     {% for i in ads %}
     <h3>
-        <a href="{% url 'ads/{{ i.id }}' slug=i.slug %}">{{ i.title }}</a>
+        <a href="{% url 'ad_detail' i.id %}">{{ i.title }}</a>
     </h3>
     {% endfor %}
     {% else %}

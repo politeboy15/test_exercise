@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.urls import reverse
-
+from ads.models import Ad
 # Create your views here.
 # home view
 def home_view(request):
@@ -15,6 +15,7 @@ def signin_view(request):
     form = SigninForm(request.POST or None)
     if request.method == 'POST':
         if form.is_valid():
+            print(form.errors)
             email = form.cleaned_data['email']
             password = form.cleaned_data['password']
             
@@ -31,7 +32,7 @@ def signin_view(request):
 # signout view
 def signout_view(request):
     if request.user.is_authenticated:
-        request.user.logout()
+        logout(request)
     return render(request, 'home.html')
 
 
@@ -49,8 +50,10 @@ def signup_view(request):
 # profile view
 def profile_view(request, user_id):
     profile_user = get_object_or_404(User, id=user_id)
-    return render(request, 'profile.html', {
+    user_ads = Ad.objects.filter(user=profile_user)  # <-- owner = ForeignKey to User
+    return render(request, 'users/profile.html', {
         'profile_user': profile_user,
+        'user_ads': user_ads
     })
 
 
@@ -61,5 +64,5 @@ def edit_profile_view(request):
         user = form.save(commit=False)  # не сохраняем сразу
         user.set_password(form.cleaned_data['password'])  # если используешь хеширование пароля
         user.save()
-        return render(request, 'profile.html')
+        return render(request, 'users/profile.html')
     return render(request, 'users/edit_profile.html', {'form': form})

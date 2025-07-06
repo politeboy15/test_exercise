@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Profile</title>
     <a href="/" onclick="return confirm('Вы уверены, что хотите вернуться на главную страницу?')">🏠 Домой</a>
 </head>
+
 <body>
     {% if request.user == profile_user %}
     <h1>Your Profile</h1>
@@ -12,7 +14,16 @@
     <p>Email: {{ user.email }}</p>
     <p>Date of birth: {{ user.date_of_birth }}</p>
     <a href="{% url 'edit_profile' %}">Edit Profile</a>
-    <a href="{% url 'ads' %}">Your Ads</a>
+    <h2>Объявления {{ profile_user.first_name }}</h2>
+    <ul>
+        {% for ad in user_ads %}
+        <li>
+            <a href="{% url 'ad_detail' ad.id %}">{{ ad.title }}</a>
+        </li>
+        {% empty %}
+        <li>Объявлений нет.</li>
+        {% endfor %}
+    </ul>
     <a href="{% url 'signout' %}">Sign out</a>
     {% else %}
     <h1>Profile</h1>
@@ -22,4 +33,5 @@
     <a href="{% url 'ads' %}">View {{ user.first_name }}'s Ads</a>
     {% endif %}
 </body>
+
 </html>

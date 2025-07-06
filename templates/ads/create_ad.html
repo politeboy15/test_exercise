@@ -9,7 +9,7 @@
     <div class="container">
         {% block content %}
         <h1>Create Ad</h1>
-        <form method="post">
+        <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             {{ form.as_p }}
             <button type="submit">Create Ad</button>

@@ -9,7 +9,17 @@
     <h1>Edit Profile</h1>
     <form method="post">
         {% csrf_token %}
-        {{ form.as_p }}
+        <p>Old first name: {{ user.first_name }}</p>
+        {{ form.first_name }}
+        <p>Old last name: {{ user.last_name }}</p>
+        {{ form.last_name }}
+        <p>Old date of birth: {{ user.date_of_birth }}</p>
+        {{ form.date_of_birth }}
+        <p>Update password: </p>
+        <p>New password:</p>
+        {{ form.password }}
+        <p>Confirm new password:</p>
+        {{ form.confirm_password }}
         <button type="submit">Save Changes</button>
     </form>
 </body>

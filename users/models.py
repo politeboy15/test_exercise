@@ -9,7 +9,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     date_of_birth = models.DateField(null=True, blank=True)
     password = models.CharField(max_length=100)
     
-    REQUIRED_FIELDS = ['__all__']
+    REQUIRED_FIELDS = ['first_name', 'last_name', 'date_of_birth', 'password']
     USERNAME_FIELD = 'email'
     is_anonymous = False
     is_authenticated = True

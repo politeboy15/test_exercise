@@ -11,8 +11,9 @@
         {% block content %}
         <h1>{{ ad.title }}</h1>
         <p>{{ ad.description }}</p>
-        <p>{{ ad.status }}</p>
+        <p>Status of this ad: {{ ad.status }}</p>
         <img src="{{ ad.image.url }}" alt="Ad's Image">
+        <p>{{ ad.image.url }}</p>
         {% endblock %}
     </div>
     <div class="user_choise">
