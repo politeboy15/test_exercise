@@ -23,7 +23,7 @@ def create_ad(request):
 def trade_view(request, ad_id):
     if request.method == 'POST':
         user_choice = request.POST.get('choice')
-
+        ad = get_object_or_404(Ad, id=ad_id)
         if user_choice == 'yes':
             if ad.user == user or ad.status != 'active' or user.ads.count() == 0:
                 messages.error(request,

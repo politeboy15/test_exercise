@@ -1,10 +1,9 @@
 from django import forms
 from .models import User
 
-class SigninForm(forms.ModelForm):
-    class Meta:
-        model = User
-        fields = ['email', 'password']
+class SigninForm(forms.Form):
+    email = forms.EmailField(label="Your e-mail")
+    password = forms.CharField(widget=forms.PasswordInput, label="Your password")
 
 class SignupForm(forms.ModelForm):
     confirm_password = forms.CharField(widget=forms.PasswordInput)

@@ -1,27 +1,33 @@
 <!DOCTYPE html>
 <html>
+    {% load static %}
 <head>
-    <title>{% block title %}Ad Detail{% endblock %}</title>
+    <title>Ad Detail</title>
+    <a href="/" onclick="return confirm('Вы уверены, что хотите вернуться на главную страницу?')">🏠 Домой</a>
 </head>
+
 <body>
-    {% block content %}
-    <h1>{{ ad.title }}</h1>
-    <p>{{ ad.description }}</p>
-    <p>{{ ad.status }}</p>
-    <img src="{{ ad.image.url }}" alt="Ad's Image">
-    {% endblock %}
-    {% block user's_choise %}
-  <p>Want to trade?</p>
-  <form method="post">
-      {% csrf_token %}
-      <input type="radio" id="yes" name="choice" value="yes">
-      <label for="yes">Yes</label><br>
+    <div class="container">
+        {% block content %}
+        <h1>{{ ad.title }}</h1>
+        <p>{{ ad.description }}</p>
+        <p>{{ ad.status }}</p>
+        <img src="{{ ad.image.url }}" alt="Ad's Image">
+        {% endblock %}
+    </div>
+    <div class="user_choise">
+        {% block user's_choise %}
+        <p>Want to trade?</p>
+        <form method="post">
+            {% csrf_token %}
+            <input type="radio" id="yes" name="choice" value="yes">
+            <label for="yes">Yes</label><br>
 
-      <input type="radio" id="no" name="choice" value="no">
-      <label for="no">No</label><br>
+            <input type="radio" id="no" name="choice" value="no">
+            <label for="no">No</label><br>
 
-      <button type="submit">Trade</button>
-  </form>
-{% endblock %}
-
+            <button type="submit">Trade</button>
+        </form>
+        {% endblock %}
+    </div>
 </body>

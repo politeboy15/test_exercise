@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+    {% load static %}
+<head>
+    <title>Create Ad</title>
+    <a href="/" onclick="return confirm('Вы уверены, что хотите вернуться на главную страницу?')">🏠 Домой</a>
+</head>
+<body>
+    <div class="container">
+        {% block content %}
+        <h1>Create Ad</h1>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Create Ad</button>
+        </form>
+        {% endblock %}
+    </div>
+</body>
+</html>

@@ -1,0 +1,32 @@
+.container {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #0b782f93;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    color: #b7b7b7;
+}
+
+.user_choise {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #07a2a28f;
+    font-family: 'Consolas', monospace;
+    color: #ffffff;
+    border: 3px solid #07a2a2;
+}
+
+.errorlist {
+    color: red;
+    font-weight: bold;
+    list-style: none;
+    padding-left: 0;
+}
+
+li {
+    color: red;
+    font-weight: bold;
+}

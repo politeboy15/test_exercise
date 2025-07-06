@@ -5,3 +5,4 @@ class AdForm(forms.ModelForm):
     class Meta:
         model = Ad
         fields = ['title', 'description', 'status', 'image']
+    
