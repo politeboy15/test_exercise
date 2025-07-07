@@ -1,10 +1,11 @@
 from django.shortcuts import render, get_object_or_404
 from .forms import *
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.urls import reverse
 from ads.models import Ad
+
 # Create your views here.
 # home view
 def home_view(request):

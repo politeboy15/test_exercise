@@ -71,3 +71,23 @@ def trade_page_view(request, ad_id):
         'ad': ad,
         'user_ads': user_ads
     })
+
+@login_required
+def ad_edit(request, ad_id):
+    ad = get_object_or_404(Ad, id=ad_id, user=request.user)
+    form = AdForm(request.POST or None, instance=ad)
+
+    if form.is_valid():
+        form.save()
+        return redirect('detail', ad_id=ad.id)
+    return render(request, 'ads/edit.html', {'form': form})
+
+@login_required
+def ad_delete(request, ad_id):
+    ad = get_object_or_404(Ad, id=ad_id, user=request.user)
+
+    if request.method == 'POST':
+        ad.delete()
+        return redirect('profile', user_id=request.user.id)
+
+    return render(request, 'ads/ad_confirm_delete.html', {'ad': ad})
