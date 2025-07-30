@@ -1,69 +1,106 @@
 from django.shortcuts import render, get_object_or_404
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_http_methods
+import json
 from .forms import *
-from django.contrib.auth import authenticate, login, logout
-from django.contrib import messages
-from django.shortcuts import redirect
-from django.urls import reverse
+from .jwt_utils import JWTUtils, PasswordUtils
+from .decorators import jwt_required
 from ads.models import Ad
 
-# Create your views here.
-# home view
-def home_view(request):
-    return render(request, 'home.html')
-
-# signin view
-def signin_view(request):
-    form = SigninForm(request.POST or None)
-    if request.method == 'POST':
-        if form.is_valid():
-            print(form.errors)
-            email = form.cleaned_data['email']
-            password = form.cleaned_data['password']
-            
-            user = authenticate(request, username=email, password=password)
-            if user is not None:
-                login(request, user)
-                return redirect(reverse('profile', args=[user.id]))
+@csrf_exempt
+@require_http_methods(["POST"])
+def signin_api(request):
+    """API для входа с JWT токеном"""
+    try:
+        data = json.loads(request.body)
+        email = data.get('email')
+        password = data.get('password')
+        
+        if not email or not password:
+            return JsonResponse({'error': 'Email and password required'}, status=400)
+        
+        try:
+            user = User.objects.get(email=email, is_active=True)
+            if user.check_password(password):
+                token = JWTUtils.generate_token(user.id)
+                return JsonResponse({
+                    'token': token,
+                    'user': {
+                        'id': user.id,
+                        'email': user.email,
+                        'first_name': user.first_name,
+                        'last_name': user.last_name
+                    }
+                })
             else:
-                messages.error(request, 'Invalid email or password.')
+                return JsonResponse({'error': 'Invalid credentials'}, status=401)
+        except User.DoesNotExist:
+            return JsonResponse({'error': 'Invalid credentials'}, status=401)
     
-    return render(request, 'users/signin.html', {'form': form})
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'Invalid JSON'}, status=400)
 
-
-# signout view
-def signout_view(request):
-    if request.user.is_authenticated:
-        logout(request)
-    return render(request, 'home.html')
-
-
-# signup view
-def signup_view(request):
-    form = SignupForm(request.POST or None)
-    if form.is_valid():
-        user = form.save(commit=False)
-        user.set_password(form.cleaned_data['password'])
+@csrf_exempt
+@require_http_methods(["POST"])
+def signup_api(request):
+    """API для регистрации с JWT токеном"""
+    try:
+        data = json.loads(request.body)
+        
+        # Валидация данных
+        required_fields = ['email', 'password', 'first_name', 'last_name']
+        for field in required_fields:
+            if not data.get(field):
+                return JsonResponse({'error': f'{field} is required'}, status=400)
+        
+        # Проверка на существование пользователя
+        if User.objects.filter(email=data['email']).exists():
+            return JsonResponse({'error': 'User with this email already exists'}, status=400)
+        
+        # Создание пользователя
+        user = User(
+            email=data['email'],
+            first_name=data['first_name'],
+            last_name=data['last_name'],
+            date_of_birth=data.get('date_of_birth')
+        )
+        user.set_password(data['password'])
         user.save()
-        login(request, user)  # Авторизуем пользователя после регистрации
-        return redirect('profile', user_id=user.id)  # Перенаправление на профиль
-    return render(request, 'users/signup.html', {'form': form})
+        
+        # Создание токена
+        token = JWTUtils.generate_token(user.id)
+        
+        return JsonResponse({
+            'token': token,
+            'user': {
+                'id': user.id,
+                'email': user.email,
+                'first_name': user.first_name,
+                'last_name': user.last_name
+            }
+        }, status=201)
+    
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'Invalid JSON'}, status=400)
 
-# profile view
-def profile_view(request, user_id):
-    profile_user = get_object_or_404(User, id=user_id)
-    user_ads = Ad.objects.filter(user=profile_user)  # <-- owner = ForeignKey to User
-    return render(request, 'users/profile.html', {
-        'profile_user': profile_user,
-        'user_ads': user_ads
+@jwt_required
+def profile_api(request):
+    """API для получения профиля пользователя"""
+    user = request.user
+    return JsonResponse({
+        'id': user.id,
+        'email': user.email,
+        'first_name': user.first_name,
+        'last_name': user.last_name,
+        'date_of_birth': user.date_of_birth
     })
 
-
-# edit profile view
-def edit_profile_view(request):
-    form = EditProfileForm(request.POST or None)
-    if form.is_valid():
-        user = form.save(commit=False)  # не сохраняем сразу
-        user.set_password(form.cleaned_data['password'])  # если используешь хеширование пароля
-        user.save()
-        return render(request, 'users/profile.html')
-    return render(request, 'users/edit_profile.html', {'form': form})
+@jwt_required
+@csrf_exempt
+@require_http_methods(["DELETE"])
+def delete_user_api(request):
+    """API для мягкого удаления пользователя"""
+    user = request.user
+    user.soft_delete()
+    return JsonResponse({'message': 'User deleted successfully'})
