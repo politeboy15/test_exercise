@@ -2,12 +2,13 @@ import jwt
 import bcrypt
 from datetime import datetime, timedelta
 from django.conf import settings
-from django.contrib.auth import get_user_model
 
-User = get_user_model()
+# убрал этот импорт потому что он вызывает циклическую зависимость
+# from django.contrib.auth import get_user_model
+# User = get_user_model()
 
-# Секретный ключ для JWT (добавьте в settings.py)
-JWT_SECRET = getattr(settings, 'JWT_SECRET', 'your-secret-key-here')
+# Получаем настройки из settings.py
+JWT_SECRET = getattr(settings, 'JWT_SECRET', 'django-fallback-secret-for-jwt-development-only')
 JWT_EXPIRATION_HOURS = getattr(settings, 'JWT_EXPIRATION_HOURS', 24)
 
 class JWTUtils:
@@ -16,8 +17,8 @@ class JWTUtils:
         """Создание JWT токена для пользователя"""
         payload = {
             'user_id': user_id,
-            'exp': datetime.utcnow() + timedelta(hours=JWT_EXPIRATION_HOURS),
-            'iat': datetime.utcnow()
+            'exp': datetime.now() + timedelta(hours=JWT_EXPIRATION_HOURS),
+            'iat': datetime.now()
         }
         token = jwt.encode(payload, JWT_SECRET, algorithm='HS256')
         return token
@@ -36,6 +37,10 @@ class JWTUtils:
     @staticmethod
     def get_user_from_token(token):
         """Получение пользователя из токена"""
+        # Импорт внутри функции - избегаем циклического импорта
+        from django.contrib.auth import get_user_model
+        User = get_user_model()
+        
         payload = JWTUtils.decode_token(token)
         if payload:
             try:
